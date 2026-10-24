@@ -166,9 +166,25 @@ sudo systemctl disable --now dsh-odospace
 ## 验证
 
 ```bash
-# 引擎 + 路由 + 协议（不需要真手机）
-node /tmp/engine-test.mjs      # 见原项目的 mock-receiver.mjs 也可
-node /tmp/receiver-test.mjs
+# 行为单测：排序顶置、签名覆盖、双帧条件、六态统计
+node test.mjs          # 15 项，失败退出码 1
 ```
 
-面板页的实际效果需要在浏览器里看：装好后点左侧栏的 Odospace 图标。
+`test.mjs` 同步自 CLI 项目的 `test-multi.mjs`，验证的是**从 CLI 同步过来的
+那几处行为**真的还在。它含真实渲染断言（双帧像素必须不同），所以需要
+`canvas`；本目录的 `node_modules` 指向 CLI 项目即可解析到。
+
+```bash
+# 协议验证：本地假接收端，按 Remote Panel 的逻辑解析帧
+node mock-receiver.mjs --port 38000 --out /tmp/mockodo --frames 3   # 见 CLI 项目
+```
+
+面板页的实际效果需要在浏览器里看：装好后点左侧栏的 Odospace 图标
+（英文界面显示 "Odospace Panel"）。
+
+### 与 CLI 项目的同步关系
+
+`lib/` 下五个模块是 CLI 项目的**逐字节副本**（只改 `.mjs` → `.js` 与 import
+后缀），所以 CLI 那边修了版面/状态判定，要重新 `cp` 过来。`engine.js` 里的
+`signatureOf()` 对应 CLI `bridge.mjs` 的内联版本 —— 两边签名字段必须一致，
+否则会出现「数据变了但面板不动」。改完跑 `node test.mjs` 就能发现。

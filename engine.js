@@ -31,7 +31,19 @@ export function renderFrame(tasks, { width, height, lit, quality }) {
  */
 export function signatureOf(tasks) {
   return tasks
-    .map((task) => [task.sessionId, task.ledState, task.title, task.prompt, task.model].join('\u0001'))
+    .map((task) =>
+      [
+        task.sessionId,
+        task.ledState,
+        task.title,
+        task.prompt,
+        task.model,
+        // 工具名和上下文百分比都直接上屏：前者是副标题文案，后者是右侧环上的
+        // 数字。漏掉它们就会出现「换了工具 / 上下文涨了 30% 但面板不动」。
+        task.runningTool,
+        task.contextPercent,
+      ].join('\u0001'),
+    )
     .join('\u0002');
 }
 
