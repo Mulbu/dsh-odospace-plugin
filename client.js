@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-  id: '@local/dsh-odospace',
+  id: '@mulbu/dsh-odospace',
   factory: (require) => {
     const module = { exports: {} };
     const exports = module.exports;

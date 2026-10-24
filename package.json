@@ -1,5 +1,5 @@
 {
-  "name": "@local/dsh-odospace",
+  "name": "@mulbu/dsh-odospace",
   "version": "3.0.0",
   "private": true,
   "type": "module",

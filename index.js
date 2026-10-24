@@ -16,7 +16,7 @@
  *
  * AIDA64 直连手机推 page 0，本插件只负责 page 1，两者互不知情 —— 详见原项目 README。
  *
- * @module @local/dsh-odospace
+ * @module @mulbu/dsh-odospace
  */
 
 import { homedir } from 'node:os';

@@ -1,6 +1,6 @@
 - insert:
     - id: dsh-odospace
-      name: '@local/dsh-odospace'
+      name: '@mulbu/dsh-odospace'
       config:
         enabled: true
         # Odospace 接收端：手机上的 Remote Panel。留空 = 不启动推流
