@@ -525,17 +525,35 @@ async function handleSettings(ctx, bridge, request, response) {
     port: (value) => strictInt(value, 1, 65535),
     page: (value) => strictInt(value, 0, 9),
     tasks: (value) => strictInt(value, 0, 8),
+    // `"1350x720"` or `"1350 x 720"`; anything else is rejected rather than
+    // silently falling back, so a typo cannot resize the panel behind your back.
+    size: (value) => {
+      if (typeof value !== 'string') return undefined;
+      const match = /^\s*(\d{2,5})\s*[x×*]\s*(\d{2,5})\s*$/i.exec(value);
+      if (match === null) return undefined;
+      const width = Number(match[1]);
+      const height = Number(match[2]);
+      if (width < 64 || width > 8192 || height < 64 || height > 8192) return undefined;
+      return `${width}x${height}`;
+    },
   };
 
   if (request.method === 'GET' || request.method === 'HEAD') {
     const live = bridge.config;
     return json(200, {
       ok: true,
-      settings: { host: live.host, port: live.port, page: live.page, tasks: live.tasks },
+      settings: {
+        host: live.host,
+        port: live.port,
+        page: live.page,
+        tasks: live.tasks,
+        size: `${live.size[0]}x${live.size[1]}`,
+      },
       bounds: {
         port: { min: 1, max: 65535 },
         page: { min: 0, max: 9 },
         tasks: { min: 0, max: 8, hint: '0 = 单任务大字号视图' },
+        size: { min: 64, max: 8192, hint: '格式 WxH，例如 1350x720' },
       },
       // 保存到 patch 层需要 configEditor；没有就只做内存热更新
       persistable: typeof ctx.get?.('configEditor')?.edit === 'function',
@@ -608,7 +626,13 @@ async function handleSettings(ctx, bridge, request, response) {
   }
 
   // 第二步：热更新运行中的桥
-  const result = bridge.update(next);
+  // `size` arrives as a normalised "WxH" string; the engine works in tuples.
+  const patch = { ...next };
+  if (typeof patch.size === 'string') {
+    const [width, height] = patch.size.split('x').map(Number);
+    patch.size = [width, height];
+  }
+  const result = bridge.update(patch);
 
   return json(200, {
     ok: true,
