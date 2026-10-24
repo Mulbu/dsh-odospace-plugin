@@ -1,0 +1,4 @@
+{
+  "title": "Odospace Panel",
+  "description": "Pushes live dsh task progress to an Odospace receiver (old-phone Remote Panel or ESP32 screen) and ships a live panel preview page in the Web UI."
+}

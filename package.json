@@ -1,0 +1,46 @@
+{
+  "name": "@local/dsh-odospace",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Odospace panel bridge as a Harness plugin: renders dsh task progress and relays AIDA64 frames over the Odospace protocol, with a live panel page in the Web UI.",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "icon": "./icon.svg",
+  "files": [
+    "icon.svg",
+    "cordis.patch.yml",
+    "lib/**/*.js",
+    "pages/*.js"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "canvas": "^3.2.3"
+  },
+  "peerDependenciesMeta": {
+    "canvas": {
+      "optional": true
+    }
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  },
+  "meta": {
+    "title": "Odospace Panel",
+    "description": "Renders dsh task progress as a JPEG panel and pushes it to an Odospace client (old phone Remote Panel, ESP32 screen), relaying AIDA64 frames on its own page. Ships a live panel preview page in the Web UI."
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "title": "Odospace 面板",
+  "description": "把 dsh 任务进度实时推到 Odospace 接收端（旧手机 Remote Panel / ESP32 副屏），并在 Web UI 里提供一页实时面板预览。"
+}

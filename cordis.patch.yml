@@ -1,0 +1,31 @@
+- insert:
+    - id: dsh-odospace
+      name: '@local/dsh-odospace'
+      config:
+        enabled: true
+        # Odospace 接收端：手机上的 Remote Panel。留空 = 不启动推流
+        # （UI 面板页仍然可用，能看任务状态、手动预览）。
+        host: '192.168.31.164'
+        port: 38000
+        # AIDA64 直连手机占 page 0，dsh 进度固定用 page 1，两边互不覆盖。
+        page: 1
+        size: '1350x720'
+        # 4 = 多任务列表视图（每行一个会话）；0 = 单任务大字号视图。
+        tasks: 4
+        includeSubagents: false
+        # 红/橙闪 0.5 秒一次；0 = 关闭灯效，只在内容变化时推一帧。
+        fps: 1
+        quality: 60
+        # 手机端靠“收到新帧”判断在线，去重会让它在内容不变时看起来卡住。
+        alwaysPush: true
+        idleFrames: false
+        checkIntervalMs: 2000
+        intervalMs: 2000
+        dryRun: false
+        # --serve 的等价物：给局域网里的 Windows 脚本拉进度 / 推传感器。
+        # 只开在局域网时要配 token，从 token.env 文件读，不写进这里。
+        serve: 3099
+        serveHost: '0.0.0.0'
+        serveTokenFile: '~/.config/dsh-odospace/token.env'
+        # 注册 odospace_panel 工具（status/preview/push）。默认关闭以省 schema 字节。
+        tool: false
